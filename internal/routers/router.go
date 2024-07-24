@@ -1,29 +1,26 @@
 package routers
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+
+	uc "ecom-project/internal/controller"
+	um "ecom-project/internal/model"
+	ur "ecom-project/internal/repo"
 )
 
 func NewServer() *gin.Engine {
 	r := gin.Default()
+
+	//User handle depenedency injection
+	user := um.NewUser()
+	userRepo := ur.NewUserRepo(user)
+
 	v1 := r.Group("/v1/2024")
 	{
-		v1.GET("/ping/:name", Pong)
-		v1.PUT("/ping", Pong)
-		v1.PATCH("/ping", Pong)
+		v1.GET("/user/:name", uc.NewUserController(userRepo).GetUserName)
+		v1.PUT("/user", uc.NewUserController(userRepo).GetUserName)
+		v1.PATCH("/user", uc.NewUserController(userRepo).GetUserName)
 	}
 
 	return r
-}
-
-func Pong(c *gin.Context) {
-	name := c.Param("name")
-	uid := c.Query("uid")
-	c.JSON(http.StatusOK, gin.H{ // map string
-		"message": "pong ... ping" + name,
-		"uid":     uid,
-		"users":   []string{"cr7", "messi", "neymar"},
-	})
 }
