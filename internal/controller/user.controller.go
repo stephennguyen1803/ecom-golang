@@ -12,7 +12,7 @@ type UserControler struct {
 
 // Define it for easy to test
 type UserServiceInterface interface {
-	GetUserByName(name string) string
+	GetUserSerivce() string
 }
 
 func NewUserController(UserService UserServiceInterface) *UserControler {
@@ -20,9 +20,8 @@ func NewUserController(UserService UserServiceInterface) *UserControler {
 }
 
 // controller -> service -> repo -> model -> dbs
-func (uc *UserControler) GetUserName(c *gin.Context) {
-	name := c.Param("name")
+func (uc *UserControler) GetUserInfo(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{ // map string
-		"message": "Helllo" + uc.UserService.GetUserByName(name),
+		"message": "Helllo" + uc.UserService.GetUserSerivce(),
 	})
 }
