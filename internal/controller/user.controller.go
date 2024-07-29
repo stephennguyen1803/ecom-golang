@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"net/http"
+	"ecom-project/pkg/response"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,7 +21,9 @@ func NewUserController(UserService UserServiceInterface) *UserControler {
 
 // controller -> service -> repo -> model -> dbs
 func (uc *UserControler) GetUserInfo(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{ // map string
-		"message": "Helllo" + uc.UserService.GetUserSerivce(),
-	})
+	response.SuccessResponse(c, uc.UserService.GetUserSerivce())
+}
+
+func (uc *UserControler) GetUserById(c *gin.Context) {
+	response.ErrorResponse(c, response.ErrorCodeParamInvalid)
 }

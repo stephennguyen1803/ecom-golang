@@ -20,6 +20,7 @@ func NewServer() *gin.Engine {
 	v1 := r.Group("/v1/2024")
 	{
 		v1.GET("/user/:name", uc.NewUserController(userSer).GetUserInfo)
+		v1.GET("/userById/:id", uc.NewUserController(userSer).GetUserById)
 		v1.PUT("/user", uc.NewUserController(userSer).GetUserInfo)
 		v1.PATCH("/user", uc.NewUserController(userSer).GetUserInfo)
 	}
