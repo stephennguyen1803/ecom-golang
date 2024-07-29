@@ -6,6 +6,7 @@ import (
 	uc "ecom-project/internal/controller"
 	um "ecom-project/internal/model"
 	ur "ecom-project/internal/repo"
+	us "ecom-project/internal/service"
 )
 
 func NewServer() *gin.Engine {
@@ -14,12 +15,13 @@ func NewServer() *gin.Engine {
 	//User handle depenedency injection
 	user := um.NewUser()
 	userRepo := ur.NewUserRepo(user)
+	userSer := us.NewUserService(userRepo)
 
 	v1 := r.Group("/v1/2024")
 	{
-		v1.GET("/user/:name", uc.NewUserController(userRepo).GetUserName)
-		v1.PUT("/user", uc.NewUserController(userRepo).GetUserName)
-		v1.PATCH("/user", uc.NewUserController(userRepo).GetUserName)
+		v1.GET("/user/:name", uc.NewUserController(userSer).GetUserInfo)
+		v1.PUT("/user", uc.NewUserController(userSer).GetUserInfo)
+		v1.PATCH("/user", uc.NewUserController(userSer).GetUserInfo)
 	}
 
 	return r

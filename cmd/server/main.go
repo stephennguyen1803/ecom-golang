@@ -10,5 +10,5 @@ func main() {
 	r := routers.NewServer()
 
 	// Listen and serve on 8081
-	r.Run(":8081")
+	r.Run(":8080")
 }

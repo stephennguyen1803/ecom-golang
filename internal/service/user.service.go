@@ -5,13 +5,13 @@ type UserService struct {
 }
 
 type UserRepoInterface interface {
-	GetUserByName(name string) string
+	GetUser() string
 }
 
 func NewUserService(userRepo UserRepoInterface) *UserService {
 	return &UserService{userRepo}
 }
 
-func (us *UserService) GetUserName(name string) string {
-	return "Hello " + us.userRepo.GetUserByName(name)
+func (us *UserService) GetUserSerivce() string {
+	return "Hello " + us.userRepo.GetUser()
 }

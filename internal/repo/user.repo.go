@@ -12,6 +12,6 @@ func NewUserRepo(User UserModelInterface) *UserRepo {
 	return &UserRepo{UserModel: User}
 }
 
-func (ur *UserRepo) GetUserByName(name string) string {
+func (ur *UserRepo) GetUser() string {
 	return "Hello " + ur.UserModel.GetUserName()
 }

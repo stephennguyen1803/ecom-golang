@@ -1,16 +1,21 @@
 # ecom-golang
+
 build ecommerce project using golang
+
 ## structure golang project
+
 project/
 |-- api/
 |   |-- handle/         # API handle request API
 |   |-- middleware/     # API middleware
-|   |__ router.go       # router
+|   |-- router.go       # router
 |-- cmd/
 |   |-- app/            # start app
 |   |-- cli/            # command line
+|   |-- server/main.go  # start the main server
 |-- config/             # anything relate to configuration
 |-- internal/           # code using for specific project
+|   |-- controller/     # Define the controller project
 |   |-- model/          # model dbs (define ORM)
 |   |-- repository/     # access database
 |   |-- service/        # logic bussiness
@@ -26,4 +31,5 @@ project/
 |__ go.mod              # go init
 
 ## Diagram project
+
 ![alt text](docs/image.png)
