@@ -1,0 +1,14 @@
+server:
+  port: 8080
+databases:
+  - user: admin
+    password: admin
+    host: mysql
+    dbName: shopDev
+  - user: admin
+    password: admin2
+    host: mongodb
+    dbName: shopDev
+security:
+  jwt:
+    key: abc123

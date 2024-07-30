@@ -1,1 +1,3 @@
 /log/*.log
+/config/production.yaml
+/config/sample.local.yaml
