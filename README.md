@@ -16,6 +16,7 @@ project/
 |-- config/             # anything relate to configuration
 |-- internal/           # code using for specific project
 |   |-- controller/     # Define the controller project
+|   |-- middelwares/    # Define authen, cors, logger, ratelimit, errorhandle (before/after) the main handle function process
 |   |-- model/          # model dbs (define ORM)
 |   |-- repository/     # access database
 |   |-- service/        # logic bussiness
