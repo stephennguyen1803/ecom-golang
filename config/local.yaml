@@ -1,5 +1,14 @@
 server:
-  port: 8080
+  port: 8090
+mysql:
+  host: 127.0.0.1
+  port: 3306
+  user: root
+  password: root1234
+  dbName: shopDevGo
+  maxIdleConns: 10
+  maxOpenConns: 100
+  connMaxLifetime: 3600
 databases:
   - user: admin
     password: admin

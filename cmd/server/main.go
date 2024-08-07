@@ -1,14 +1,9 @@
 package main
 
 import (
-	"ecom-project/internal/routers"
-	"fmt"
+	"ecom-project/internal/initialize"
 )
 
 func main() {
-	fmt.Println("Hello, World!")
-	r := routers.NewServer()
-
-	// Listen and serve on 8081
-	r.Run(":8080")
+	initialize.Run()
 }
