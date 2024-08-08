@@ -1,3 +1,0 @@
-{"level":"INFO","timestamp":"2024-08-08T10:39:43.674+0700","caller":"initialize/run.go:16","message":"Logger init success 1234","logger":"zap"}
-{"level":"INFO","timestamp":"2024-08-08T10:40:38.993+0700","caller":"initialize/run.go:16","message":"Logger init success 1234","logger":"zap"}
-{"level":"INFO","timestamp":"2024-08-08T11:04:23.733+0700","caller":"initialize/run.go:16","message":"Logger init success 1234","logger":"zap"}
