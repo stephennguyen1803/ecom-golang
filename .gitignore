@@ -1,3 +1,4 @@
 /log/*.log
 /config/production.yaml
 /config/local.yaml
+/storages/*.log

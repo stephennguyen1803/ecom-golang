@@ -21,3 +21,10 @@ databases:
 security:
   jwt:
     key: abc123
+log:
+  level: debug
+  file_log_name: "./storages/logs/app.log"
+  max_size: 100
+  max_backups: 7
+  max_age: 7
+  compress: true

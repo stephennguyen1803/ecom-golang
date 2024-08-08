@@ -1,0 +1,1 @@
+{"level":"INFO","timestamp":"2024-08-08T10:13:23.456+0700","caller":"initialize/run.go:16","message":"Logger init success","logger":"zap"}

@@ -3,6 +3,7 @@ package settings
 type Config struct {
 	Server ServerSetting `mapstructure:"server"`
 	Mysql  MysqlSetting  `mapstructure:"mysql"`
+	Logger LoggerSetting `mapstructure:"log"`
 }
 
 type ServerSetting struct {
@@ -18,4 +19,13 @@ type MysqlSetting struct {
 	MaxIdleConns    int    `mapstructure:"maxIdleConns"`
 	MaxOpenConns    int    `mapstructure:"maxOpenConns"`
 	ConnMaxLifeTime int    `mapstructure:"connMaxLifetime"`
+}
+
+type LoggerSetting struct {
+	Level       string `mapstructure:"level"`
+	FileLogName string `mapstructure:"file_log_name"`
+	MaxSize     int    `mapstructure:"max_size"`
+	MaxAge      int    `mapstructure:"max_age"`
+	MaxBackups  int    `mapstructure:"max_backups"`
+	Compress    bool   `mapstructure:"compress"`
 }
