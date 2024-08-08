@@ -16,6 +16,7 @@ project/
 |-- config/             # anything relate to configuration
 |-- internal/           # code using for specific project
 |   |-- controller/     # Define the controller project
+|   |-- initialize/     # Define the init all service, third party in here (redis, database, env)
 |   |-- middelwares/    # Define authen, cors, logger, ratelimit, errorhandle (before/after) the main handle function process
 |   |-- model/          # model dbs (define ORM)
 |   |-- repository/     # access database
@@ -23,6 +24,10 @@ project/
 |   |-- util/           # util helpful
 |-- migrations/         # migration database
 |-- pkg/                # libary has been defined
+|   |-- logger/         # Define logger
+|   |-- response/       # Define Response and Status Code
+|   |-- settings/       # Define Config for all service (redis, mysql, ...)
+|   |-- utlis/          # Update later
 |-- scripts/            # Buill, install, ...
 |-- test/               # test
 |-- web/                # FE code (if we have it)
