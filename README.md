@@ -14,6 +14,8 @@ project/
 |   |-- cli/            # command line
 |   |-- server/main.go  # start the main server
 |-- config/             # anything relate to configuration
+|-- docs/               # Document Project
+|-- global/             # Define Global Variable Value using for All Service
 |-- internal/           # code using for specific project
 |   |-- controller/     # Define the controller project
 |   |-- initialize/     # Define the init all service, third party in here (redis, database, env)
