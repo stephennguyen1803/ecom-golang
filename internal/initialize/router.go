@@ -1,33 +1,45 @@
 package initialize
 
 import (
-	"ecom-project/internal/controller"
+	"ecom-project/global"
 	"ecom-project/internal/middlewares"
-	"ecom-project/internal/model"
-	"ecom-project/internal/repo"
-	"ecom-project/internal/service"
+	"ecom-project/internal/routers"
 
 	"github.com/gin-gonic/gin"
 )
 
 func InitRouter() *gin.Engine {
-	// Router initialization
-	r := gin.Default()
+	var r *gin.Engine
+	if global.Config.Server.Mode == "dev" {
+		gin.SetMode(gin.DebugMode)
+		gin.ForceConsoleColor()
+		r = gin.Default()
+	} else {
+		gin.SetMode(gin.ReleaseMode)
+		r = gin.New()
+	}
+
 	//call middleware
+	//r.Use(middlewares.Logger())
 	r.Use(middlewares.AuthenMiddleware())
+	//r.Use(middlewares.AuthorizeMiddleware())
+	//r.Use(middlewares.CORSMiddleware())
+	//r.Use(middlewares.RateLimitMiddleware())
 
-	//User handle depenedency injection
-	user := model.NewUser()
-	userRepo := repo.NewUserRepo(user)
-	userSer := service.NewUserService(userRepo)
+	manageGroupRouter := routers.RouterGroupApp.Manage
+	userGroupRouter := routers.RouterGroupApp.User
 
-	v1 := r.Group("/v1/2024")
+	MainGroup := r.Group("/v1/2024")
 	{
-		v1.GET("/ping", controller.PingController)
-		v1.GET("/user/:name", controller.NewUserController(userSer).GetUserInfo)
-		v1.GET("/userById/:id", controller.NewUserController(userSer).GetUserById)
-		v1.PUT("/user", controller.NewUserController(userSer).GetUserInfo)
-		v1.PATCH("/user", controller.NewUserController(userSer).GetUserInfo)
+		MainGroup.GET("/chekcStatus") // tracking monitor - check health of service
+	}
+	{
+		userGroupRouter.UserRouter.InitUserRouter(MainGroup)
+		userGroupRouter.ProductRouter.InitProductRouter(MainGroup)
+	}
+	{
+		manageGroupRouter.UserRouter.InitUserRouter(MainGroup)
+		manageGroupRouter.AdminRouter.InitAdminRouter(MainGroup)
 	}
 
 	return r
