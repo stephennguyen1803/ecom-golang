@@ -9,6 +9,12 @@ mysql:
   maxIdleConns: 10
   maxOpenConns: 100
   connMaxLifetime: 3600
+redis:
+  host: 127.0.0.1
+  port: 6379
+  password: ""
+  db: 0
+  protocal: 3
 databases:
   - user: root
     password: admin
