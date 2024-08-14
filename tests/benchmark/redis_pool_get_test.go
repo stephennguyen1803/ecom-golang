@@ -29,9 +29,11 @@ func BenchmarkPoolSizeGet1(b *testing.B) {
 	defer rdb.Close()
 	b.ResetTimer()
 	initDataRedis(b, ctxGet, rdb)
-	for i := 0; i < b.N; i++ {
-		rdb.Get(ctxGet, "key"+strconv.Itoa(i))
-	}
+	b.RunParallel(func(pb *testing.PB) {
+		for i := 0; pb.Next(); i++ {
+			rdb.Get(ctxGet, "key"+strconv.Itoa(i))
+		}
+	})
 }
 
 func BenchmarkPoolSizeGet15(b *testing.B) {
@@ -43,7 +45,9 @@ func BenchmarkPoolSizeGet15(b *testing.B) {
 	defer rdb.Close()
 	b.ResetTimer()
 	initDataRedis(b, ctxGet, rdb)
-	for i := 0; i < b.N; i++ {
-		rdb.Get(ctxGet, "key"+strconv.Itoa(i))
-	}
+	b.RunParallel(func(pb *testing.PB) {
+		for i := 0; pb.Next(); i++ {
+			rdb.Get(ctxGet, "key"+strconv.Itoa(i))
+		}
+	})
 }
