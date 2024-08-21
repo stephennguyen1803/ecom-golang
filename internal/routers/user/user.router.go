@@ -1,6 +1,8 @@
 package user
 
 import (
+	"ecom-project/internal/wire"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -8,10 +10,16 @@ type UserRouter struct{}
 
 func (ur *UserRouter) InitUserRouter(router *gin.RouterGroup) {
 	//public route - not require authentication
+
+	// init controller
+	// Using Wire Go to inject dependency
+	// Dependency Injection
+	userController, _ := wire.InitUserRouterHandler()
+
 	userRouterPublic := router.Group("/user")
 	{
 		//call middleware
-		userRouterPublic.GET("/register") // register -> YES -> send OTP -> verify OTP -> create account ||
+		userRouterPublic.POST("/register", userController.Register) // register -> YES -> send OTP -> verify OTP -> create account ||
 		userRouterPublic.POST("/otp")
 	}
 	//private route - require authentication
