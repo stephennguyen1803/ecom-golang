@@ -1,13 +1,15 @@
 package controller
 
 import (
+	"ecom-project/internal/service"
 	"ecom-project/pkg/response"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 )
 
-type UserControler struct {
-	UserService UserServiceInterface
+type UserController struct {
+	userService service.IUserService
 }
 
 // Define it for easy to test
@@ -15,15 +17,26 @@ type UserServiceInterface interface {
 	GetUserSerivce() string
 }
 
-func NewUserController(UserService UserServiceInterface) *UserControler {
-	return &UserControler{UserService: UserService}
+func NewUserController(userService service.IUserService) *UserController {
+	return &UserController{userService: userService}
+}
+
+func (uc *UserController) Register(c *gin.Context) {
+	email := c.PostForm("email")
+	purpose := c.PostForm("purpose")
+	result := uc.userService.Register(email, purpose)
+	if result != response.ErrorCodeSuccess {
+		response.ErrorResponse(c, result)
+		return
+	}
+	response.SuccessResponse(c, fmt.Sprintf("Register success with Email %s", email))
 }
 
 // controller -> service -> repo -> model -> dbs
-func (uc *UserControler) GetUserInfo(c *gin.Context) {
-	response.SuccessResponse(c, uc.UserService.GetUserSerivce())
-}
+// func (uc *UserController) GetUserInfo(c *gin.Context) {
+// 	response.SuccessResponse(c, uc.userService.GetUserSerivce())
+// }
 
-func (uc *UserControler) GetUserById(c *gin.Context) {
-	response.ErrorResponse(c, response.ErrorCodeParamInvalid)
-}
+// func (uc *UserController) GetUserById(c *gin.Context) {
+// 	response.ErrorResponse(c, response.ErrorCodeParamInvalid)
+// }
