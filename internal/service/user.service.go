@@ -2,24 +2,12 @@ package service
 
 import (
 	"ecom-project/internal/repo"
+	"ecom-project/internal/utils/crypto"
+	"ecom-project/internal/utils/random"
 	"ecom-project/pkg/response"
+	"fmt"
+	"time"
 )
-
-// type userService struct {
-// 	userRepo UserRepoInterface
-// }
-
-// type UserRepoInterface interface {
-// 	GetUser() string
-// }
-
-// func NewUserService(userRepo UserRepoInterface) *userService {
-// 	return &userService{userRepo}
-// }
-
-// func (us *userService) GetUserSerivce() string {
-// 	return "Hello " + us.userRepo.GetUser()
-// }
 
 type IUserService interface {
 	RegisterUser(email string, password string) (string, error)
@@ -27,17 +15,39 @@ type IUserService interface {
 }
 
 type userService struct {
-	userRepo repo.IUserRepository
+	userRepo     repo.IUserRepository
+	userAuthRepo repo.IUserAuthRepository
 }
 
 // Register implements IUserService.
 func (us *userService) Register(email string, purpose string) int {
-	//1 - check if email is already exist
+	//0 - hash email - security email - save info into redis
+	emailHash := crypto.GetHash(email)
+	fmt.Printf("Email hash: %s\n", emailHash)
 
+	//5 - check OTP exist in redis
+
+	//6 - process OTP invalid
+
+	//1 - check if email is already exist in DB
 	if us.userRepo.GetUserByEmail(email) {
 		return response.ErrorCodeUserHasExists
 	}
-	//2 - if not exist, send email
+	//2 - create new OTP
+	otp := random.GenSixDigitalOTP()
+	if purpose == "TEST-DEV" {
+		otp = 123456
+	}
+
+	fmt.Printf("OTP: %d\n", otp)
+
+	//3 - save OTP into redis with ttl 5 minutes
+	err := us.userAuthRepo.AddOtp(emailHash, otp, int64(10*time.Minute))
+	if err != nil {
+		return response.ErrorInvalidOTP
+	}
+
+	//4 - send OTP to email
 
 	return response.ErrorCodeSuccess
 }
@@ -47,6 +57,6 @@ func (us *userService) RegisterUser(email string, password string) (string, erro
 	panic("unimplemented")
 }
 
-func NewUserService(userRepo repo.IUserRepository) IUserService {
-	return &userService{userRepo}
+func NewUserService(userRepo repo.IUserRepository, userAuthenRepo repo.IUserAuthRepository) IUserService {
+	return &userService{userRepo, userAuthenRepo}
 }

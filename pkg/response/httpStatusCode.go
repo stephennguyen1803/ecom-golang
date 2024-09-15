@@ -7,6 +7,7 @@ const (
 
 	//Register Code
 	ErrorCodeUserHasExists = 50001 // User has exist
+	ErrorInvalidOTP        = 50002 // Invalid OTP
 )
 
 // message map
@@ -15,4 +16,5 @@ var msg = map[int]string{
 	ErrorCodeParamInvalid:  "Email is invalid",
 	ErrorTokenInvalid:      "Token is invalid",
 	ErrorCodeUserHasExists: "User has exist",
+	ErrorInvalidOTP:        "Invalid OTP",
 }
