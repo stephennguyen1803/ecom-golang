@@ -26,7 +26,7 @@ type userRepository struct {
 
 // GetUserByEmail implements IUserRepository.
 func (ur *userRepository) GetUserByEmail(email string) bool {
-	return true
+	return false
 }
 
 // GetUserByPhone implements IUserRepository.

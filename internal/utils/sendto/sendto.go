@@ -1,7 +1,19 @@
 package sendto
 
 import (
+	"ecom-project/global"
 	"fmt"
+	"net/smtp"
+	"strconv"
+
+	"go.uber.org/zap"
+)
+
+const (
+	SMTPHOST     = "127.0.0.1"
+	SMTPPORT     = "1025"
+	SMTPUsername = ""
+	SMTPPassword = ""
 )
 
 type EmailAddress struct {
@@ -28,16 +40,33 @@ func BuildMessage(mail Mail) string {
 }
 
 func SendTextEmail(to []string, form string, otp int) error {
+	fmt.Println("To: ", to)
 	contentEmail := Mail{
 		From:    EmailAddress{Address: form, Name: "Ecom Golang"},
 		To:      to,
 		Subject: "OTP Verification",
 		Object:  "OTP",
-		Body:    "Your OTP is " + string(otp),
+		Body:    "Your OTP is " + strconv.Itoa(otp),
 	}
 
 	messageEmail := BuildMessage(contentEmail)
 
 	//send email
-	//auth := smtp.PlainAuth("",)
+	auth := smtp.PlainAuth("", SMTPUsername, SMTPPassword, SMTPHOST)
+
+	err := smtp.SendMail(
+		fmt.Sprintf("%s:%s", SMTPHOST, SMTPPORT),
+		auth,
+		form,
+		to,
+		[]byte(messageEmail))
+
+	if err != nil {
+		global.Logger.Error(
+			fmt.Sprintf("Send Email Has Error with: form %s to %s with otp %d", form, to, otp), zap.Error(err))
+		return err
+	}
+
+	return nil
+
 }

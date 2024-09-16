@@ -4,6 +4,7 @@ import (
 	"ecom-project/internal/repo"
 	"ecom-project/internal/utils/crypto"
 	"ecom-project/internal/utils/random"
+	"ecom-project/internal/utils/sendto"
 	"ecom-project/pkg/response"
 	"fmt"
 	"time"
@@ -47,7 +48,13 @@ func (us *userService) Register(email string, purpose string) int {
 		return response.ErrorInvalidOTP
 	}
 
+	fmt.Println(email)
+
 	//4 - send OTP to email
+	err = sendto.SendTextEmail([]string{email}, "anhdung.phc@gmail.com", otp)
+	if err != nil {
+		return response.ErrorSendEmail
+	}
 
 	return response.ErrorCodeSuccess
 }

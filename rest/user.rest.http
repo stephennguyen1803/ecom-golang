@@ -1,0 +1,16 @@
+@baseurl=http://localhost:8090/v1/2024
+
+
+### User Health Check
+GET {{baseurl}}/chekcStatus
+Authorization: valid-token
+
+### User Registration
+POST {{baseurl}}/user/register
+Authorization: valid-token
+Content-Type: application/json
+
+{
+    "email": "demo01@gmail.com",
+    "purpose": "TEST-DEV"
+}
