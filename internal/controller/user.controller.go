@@ -2,6 +2,7 @@ package controller
 
 import (
 	"ecom-project/internal/service"
+	"ecom-project/pkg/request"
 	"ecom-project/pkg/response"
 	"fmt"
 
@@ -22,8 +23,17 @@ func NewUserController(userService service.IUserService) *UserController {
 }
 
 func (uc *UserController) Register(c *gin.Context) {
-	email := c.PostForm("email")
-	purpose := c.PostForm("purpose")
+	// email := c.PostForm("email")
+	// purpose := c.PostForm("purpose")
+
+	var userRequestBody request.UserRequestBody
+	if err := c.BindJSON(&userRequestBody); err != nil {
+		response.ErrorResponse(c, response.ErrorUserBadRequest)
+		return
+	}
+	email := userRequestBody.Email
+	purpose := userRequestBody.Purpose
+
 	result := uc.userService.Register(email, purpose)
 	if result != response.ErrorCodeSuccess {
 		response.ErrorResponse(c, result)
