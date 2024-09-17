@@ -15,9 +15,11 @@ import (
 // Injectors from user.wire.go:
 
 func InitUserRouterHandler() (*controller.UserController, error) {
-	iUserRepository := repo.NewUserRepository()
 	iUserAuthRepository := repo.NewUserAuthRepository()
-	iUserService := service.NewUserService(iUserRepository, iUserAuthRepository)
+	redisService := service.NewRedisService(iUserAuthRepository)
+	iUserRepository := repo.NewUserRepository()
+	otpFactory := service.NewOTPFactory(iUserRepository)
+	iUserService := service.NewUserService(redisService, otpFactory)
 	userController := controller.NewUserController(iUserService)
 	return userController, nil
 }

@@ -31,7 +31,7 @@ func (ur *userRepository) GetUserByEmail(email string) bool {
 
 // GetUserByPhone implements IUserRepository.
 func (ur *userRepository) GetUserByPhone(phone string) bool {
-	panic("unimplemented")
+	return false
 }
 
 func NewUserRepository() IUserRepository {

@@ -5,12 +5,22 @@
 GET {{baseurl}}/chekcStatus
 Authorization: valid-token
 
-### User Registration
+### User Registration by Email
 POST {{baseurl}}/user/register
 Authorization: valid-token
 Content-Type: application/json
 
 {
     "email": "demo01@gmail.com",
+    "purpose": "TEST-DEV"
+}
+
+### User Registration Phone
+POST {{baseurl}}/user/register
+Authorization: valid-token
+Content-Type: application/json
+
+{
+    "phone": "0383826639",
     "purpose": "TEST-DEV"
 }

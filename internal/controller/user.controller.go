@@ -2,7 +2,7 @@ package controller
 
 import (
 	"ecom-project/internal/service"
-	"ecom-project/pkg/request"
+	"ecom-project/internal/vo"
 	"ecom-project/pkg/response"
 	"fmt"
 
@@ -13,33 +13,44 @@ type UserController struct {
 	userService service.IUserService
 }
 
-// Define it for easy to test
-type UserServiceInterface interface {
-	GetUserSerivce() string
-}
-
 func NewUserController(userService service.IUserService) *UserController {
 	return &UserController{userService: userService}
 }
 
 func (uc *UserController) Register(c *gin.Context) {
-	// email := c.PostForm("email")
-	// purpose := c.PostForm("purpose")
+	var params vo.UserRegistratorRequest
 
-	var userRequestBody request.UserRequestBody
-	if err := c.BindJSON(&userRequestBody); err != nil {
+	// Bind the incoming JSON to the combined struct
+	err := c.BindJSON(&params)
+	if err != nil {
 		response.ErrorResponse(c, response.ErrorUserBadRequest)
 		return
 	}
-	email := userRequestBody.Email
-	purpose := userRequestBody.Purpose
 
-	result := uc.userService.Register(email, purpose)
-	if result != response.ErrorCodeSuccess {
-		response.ErrorResponse(c, result)
+	// Process Email registration if email is provided
+	if params.Email != "" {
+		result := uc.userService.Register(params.Email, params.Purpose)
+		if result != response.ErrorCodeSuccess {
+			response.ErrorResponse(c, result)
+			return
+		}
+		response.SuccessResponse(c, fmt.Sprintf("Register success with Email %s", params.Email))
 		return
 	}
-	response.SuccessResponse(c, fmt.Sprintf("Register success with Email %s", email))
+
+	// Process Phone registration if phone is provided
+	if params.Phone != "" {
+		result := uc.userService.Register(params.Phone, params.Purpose)
+		if result != response.ErrorCodeSuccess {
+			response.ErrorResponse(c, result)
+			return
+		}
+		response.SuccessResponse(c, fmt.Sprintf("Register success with Phone %s", params.Phone))
+		return
+	}
+
+	// If neither email nor phone is provided, return an error
+	response.ErrorResponse(c, response.ErrorUserBadRequest)
 }
 
 // controller -> service -> repo -> model -> dbs
