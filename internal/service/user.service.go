@@ -1,13 +1,12 @@
 package service
 
 import (
-	"ecom-project/internal/repo"
 	"ecom-project/internal/utils/crypto"
-	"ecom-project/internal/utils/random"
-	"ecom-project/internal/utils/sendto"
 	"ecom-project/pkg/response"
 	"fmt"
 	"time"
+
+	"golang.org/x/exp/rand"
 )
 
 type IUserService interface {
@@ -16,44 +15,45 @@ type IUserService interface {
 }
 
 type userService struct {
-	userRepo     repo.IUserRepository
-	userAuthRepo repo.IUserAuthRepository
+	redisService *RedisService
+	otpFactory   *OTPFactory
 }
 
 // Register implements IUserService.
-func (us *userService) Register(email string, purpose string) int {
-	//0 - hash email - security email - save info into redis
-	emailHash := crypto.GetHash(email)
-	fmt.Printf("Email hash: %s\n", emailHash)
+func (us *userService) Register(userIdentify string, purpose string) int {
+	//1. Get the appropriate strategy (email or phone)
+	strategy, err := us.otpFactory.GetOTPService(userIdentify)
+	if err != nil {
+		return response.ErrorCodeParamInvalid
+	}
 
 	//5 - check OTP exist in redis
 
 	//6 - process OTP invalid
 
-	//1 - check if email is already exist in DB
-	if us.userRepo.GetUserByEmail(email) {
-		return response.ErrorCodeUserHasExists
+	//1 - Check if the user (email or phone) already exists
+	if err := strategy.CheckIfUserExists(userIdentify); err != nil {
+		return response.ErrorCodeUserHasExists // Return if user already exists
 	}
-	//2 - create new OTP
-	otp := random.GenSixDigitalOTP()
-	if purpose == "TEST-DEV" {
-		otp = 123456
-	}
+	// 3. Generate OTP
+	otp := us.generateOTP(purpose)
+	fmt.Printf("Generated OTP: %d\n", otp)
 
-	fmt.Printf("OTP: %d\n", otp)
+	// 4. Hash the userIdentify (email or phone) for Redis
+	userIdentifyHash := crypto.GetHash(userIdentify)
+	fmt.Printf("Destination hash: %s\n", userIdentifyHash)
 
-	//3 - save OTP into redis with ttl 5 minutes
-	err := us.userAuthRepo.AddOtp(emailHash, otp, int64(10*time.Minute))
+	// 5. Save OTP into Redis with TTL (5 minutes)
+	err = us.redisService.SaveOTP(userIdentifyHash, otp, 5*time.Minute)
 	if err != nil {
+		fmt.Println("Error saving OTP to Redis:", err)
 		return response.ErrorInvalidOTP
 	}
 
-	fmt.Println(email)
-
-	//4 - send OTP to email
-	err = sendto.SendTextEmail([]string{email}, "anhdung.phc@gmail.com", otp)
+	// 6. Send the OTP via the appropriate strategy (email or phone)
+	err = strategy.SendOTP(userIdentify, otp)
 	if err != nil {
-		return response.ErrorSendEmail
+		return response.ErrorSendOTP
 	}
 
 	return response.ErrorCodeSuccess
@@ -64,6 +64,14 @@ func (us *userService) RegisterUser(email string, password string) (string, erro
 	panic("unimplemented")
 }
 
-func NewUserService(userRepo repo.IUserRepository, userAuthenRepo repo.IUserAuthRepository) IUserService {
-	return &userService{userRepo, userAuthenRepo}
+func NewUserService(redisService *RedisService, otpFactory *OTPFactory) IUserService {
+	return &userService{redisService, otpFactory}
+}
+
+// Helper function to generate OTP based on the purpose
+func (us *userService) generateOTP(purpose string) int {
+	if purpose == "TEST-DEV" {
+		return 123456
+	}
+	return rand.Intn(900000) + 100000 // Generates a random 6-digit OTP
 }
