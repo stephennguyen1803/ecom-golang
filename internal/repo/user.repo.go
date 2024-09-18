@@ -1,5 +1,10 @@
 package repo
 
+import (
+	"ecom-project/global"
+	"ecom-project/internal/model"
+)
+
 // type userRepo struct {
 // 	UserModel UserModelInterface
 // }
@@ -26,12 +31,15 @@ type userRepository struct {
 
 // GetUserByEmail implements IUserRepository.
 func (ur *userRepository) GetUserByEmail(email string) bool {
-	return false
+	row := global.Mdb.Table(TableNameGoCrmUser).Where("usr_email = ?", email).First(&model.GoCrmUser{}).RowsAffected
+	return row != NumberNull
 }
 
 // GetUserByPhone implements IUserRepository.
 func (ur *userRepository) GetUserByPhone(phone string) bool {
-	return false
+
+	row := global.Mdb.Table(TableNameGoCrmUser).Where("usr_phone = ?", phone).First(&model.GoCrmUser{}).RowsAffected
+	return row != NumberNull
 }
 
 func NewUserRepository() IUserRepository {

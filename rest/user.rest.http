@@ -12,7 +12,7 @@ Content-Type: application/json
 
 {
     "email": "demo01@gmail.com",
-    "purpose": "TEST-DEV"
+    "purpose": "TEST-DEV444"
 }
 
 ### User Registration Phone
@@ -22,5 +22,5 @@ Content-Type: application/json
 
 {
     "phone": "0383826639",
-    "purpose": "TEST-DEV"
+    "purpose": "TEST-DEV111"
 }
