@@ -1,6 +1,7 @@
 package initialize
 
 import (
+	"database/sql"
 	"ecom-project/global"
 	"ecom-project/internal/po"
 	"fmt"
@@ -39,6 +40,23 @@ func InitMysql() {
 	// create tables
 	migrateTables()
 	genTableDAO()
+}
+
+func InitMysqlSQLC() {
+	// Mysql initialization
+	mysqlConfig := global.Config.Mysql
+	// set loc = local to avoid UTC time
+	dsn := "%s:%s@tcp(%v:%v)/%s?charset=utf8mb4&parseTime=True&loc=Local"
+	var s = fmt.Sprintf(dsn, mysqlConfig.User, mysqlConfig.Password, mysqlConfig.Host, mysqlConfig.Port, mysqlConfig.DbName)
+	db, err := sql.Open("mysql", s)
+	if err != nil {
+		checkErrorPanic(err, "Failed to connect to database using SQLC")
+	}
+	global.Logger.Info("Mysql SQLC connected successfully")
+	global.Mdbc = db
+
+	// set pool
+	setPool()
 }
 
 // open the pool
