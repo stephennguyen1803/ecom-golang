@@ -16,6 +16,7 @@ func Run() {
 	global.Logger.Info("Logger init success 1234", zap.String("logger", "zap"))
 	//3 - init mysql
 	InitMysql()
+	InitMysqlSQLC()
 	fmt.Printf("mysql.username: %v\n", global.Config.Mysql.User)
 	//4 - init redis
 	InitRedis()
