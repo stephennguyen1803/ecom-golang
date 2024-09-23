@@ -1,9 +1,12 @@
 package sendto
 
 import (
+	"bytes"
 	"ecom-project/global"
 	"fmt"
+	"html/template"
 	"net/smtp"
+	"path/filepath"
 	"strconv"
 
 	"go.uber.org/zap"
@@ -70,5 +73,67 @@ func SendTextEmail(to []string, form string, otp int) error {
 	}
 
 	return nil
+}
 
+func Send(to []string, form string, htmlTemplate string) error {
+	contentEmail := Mail{
+		From:    EmailAddress{Address: form, Name: "Ecom Golang"},
+		To:      to,
+		Subject: "OTP Verification",
+		Body:    htmlTemplate,
+	}
+
+	messageEmail := BuildMessage(contentEmail)
+
+	//send email
+	auth := smtp.PlainAuth("", SMTPUsername, SMTPPassword, SMTPHOST)
+
+	err := smtp.SendMail(
+		fmt.Sprintf("%s:%s", SMTPHOST, SMTPPORT),
+		auth,
+		form,
+		to,
+		messageEmail)
+
+	if err != nil {
+		global.Logger.Error(
+			fmt.Sprintf("Send Email Template Has Error with: form %s to %s", form, to), zap.Error(err))
+		return err
+	}
+
+	return nil
+}
+
+func SendTemplateEmailOtp(
+	to []string,
+	form string,
+	htmlTemplate string,
+	dataTemplate map[string]interface{}) error {
+
+	// Parse the HTML template with your OTP data
+	htmlBody, err := getTemplateString(htmlTemplate, dataTemplate)
+	if err != nil {
+		return err
+	}
+
+	return Send(to, form, htmlBody)
+}
+
+func getTemplateString(templateName string, dataTemplate map[string]interface{}) (string, error) {
+	// Read the template file
+	templatePath := filepath.Join("internal", "templates", templateName+".html")
+
+	// Read and parse the template file
+	htmlTemplate := new(bytes.Buffer)
+	t, err := template.ParseFiles(templatePath)
+	if err != nil {
+		return "", err
+	}
+
+	err = t.Execute(htmlTemplate, dataTemplate)
+	if err != nil {
+		return "", err
+	}
+
+	return htmlTemplate.String(), nil
 }

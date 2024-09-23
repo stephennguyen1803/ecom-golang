@@ -18,6 +18,8 @@ func InitRouter() *gin.Engine {
 		gin.SetMode(gin.ReleaseMode)
 		r = gin.New()
 	}
+	// Serve static files from the "assets" directory - should be used for development only
+	r.Static("/assets/images", "./assets/images")
 
 	//call middleware
 	//r.Use(middlewares.Logger())

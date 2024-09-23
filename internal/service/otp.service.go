@@ -4,6 +4,7 @@ import (
 	"ecom-project/internal/repo"
 	"ecom-project/internal/utils/sendto"
 	"errors"
+	"fmt"
 )
 
 // OTPService defines the interface for sending OTP.
@@ -24,7 +25,18 @@ func NewEmailOTPService(userRepo repo.IUserRepository) *EmailOTPService {
 
 // SendOTP implements OTP sending via email.
 func (e *EmailOTPService) SendOTP(email string, otp int) error {
-	err := sendto.SendTextEmail([]string{email}, "anhdung.phc@gmail.com", otp)
+	//option-1: using send text email
+	//err := sendto.SendTextEmail([]string{email}, "anhdung.phc@gmail.com", otp)
+
+	//option-2: using send html email using template html
+	err := sendto.SendTemplateEmailOtp(
+		[]string{email},
+		"anhdung.phc@gmail.com",
+		"otp_email",
+		map[string]interface{}{"otp": otp})
+	if err != nil {
+		fmt.Println("Error sending OTP via email:", err)
+	}
 	return err
 }
 

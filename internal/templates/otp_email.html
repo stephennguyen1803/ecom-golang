@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xác nhận địa chỉ Email</title>
+<style>
+  body { font-family: Arial, sans-serif; text-align: center; margin: 0; padding: 0; }
+  .container { padding: 20px; }
+  .header { font-size: 24px; margin-bottom: 20px; }
+  .message { font-size: 16px; margin-bottom: 20px; }
+  .otp { font-size: 2em; margin: 20px auto; width: 100px; padding: 10px; border: 1px solid #000; display: inline-block; }
+  footer { margin-top: 20px; font-size: 12px; color: #888; }
+  .social-icons { margin-top: 10px; }
+  .social-icons img { width: 24px; height: 24px; margin: 0 5px; 
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <img src="http://localhost:8090/assets/images/email_icon.png" alt="Envelope Icon" style="width: 50px; vertical-align: middle;">
+    <span>Xác nhận địa chỉ Email</span>
+  </div>
+
+  <div class="message">
+    Vui lòng xác nhận địa chỉ email của bạn để chúng tôi biết đây là hành động hợp pháp của bạn.
+  </div>
+
+  <div class="otp">{{.otp}}</div>
+
+  <footer>
+    <p>EcomDungNa © 2023 EcomDungNa, Inc. All Rights Reserved.</p>
+    <p>13E Nguyễn Văn Linh,Hồ Chí Minh City, City</p>
+    <div class="social-icons">
+        <a href="https://www.facebook.com/yourpage"><img src="http://localhost:8090/assets/images/facebook_icon.png" alt="Facebook"></a>
+        <a href="https://www.twitter.com/yourpage"><img src="http://localhost:8090/assets/images/x_icon.png" alt="Twitter"></a>
+        <a href="https://www.instagram.com/yourpage"><img src="http://localhost:8090/assets/images/instagram_icon.png" alt="Instagram"></a>
+    </div>
+  </footer>
+</div>
+
+</body>
+</html>
