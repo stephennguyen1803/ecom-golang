@@ -20,7 +20,11 @@ func Run() {
 	fmt.Printf("mysql.username: %v\n", global.Config.Mysql.User)
 	//4 - init redis
 	InitRedis()
-	//5 - init router
+	//5 - init kafka
+	//InitKafka()
+	//5 - init RabbitMQ
+	InitRabbitMQ()
+	//6 - init router
 	r := InitRouter()
 	port := ":" + strconv.Itoa(global.Config.Server.Port)
 	r.Run(port)
