@@ -1,10 +1,11 @@
 package settings
 
 type Config struct {
-	Server ServerSetting `mapstructure:"server"`
-	Mysql  MysqlSetting  `mapstructure:"mysql"`
-	Logger LoggerSetting `mapstructure:"log"`
-	Redis  RedisSetting  `mapstructure:"redis"`
+	Server   ServerSetting   `mapstructure:"server"`
+	Mysql    MysqlSetting    `mapstructure:"mysql"`
+	Logger   LoggerSetting   `mapstructure:"log"`
+	Redis    RedisSetting    `mapstructure:"redis"`
+	RabbitMQ RabbitMQSetting `mapstructure:"rabbitmq"`
 }
 
 type ServerSetting struct {
@@ -38,4 +39,12 @@ type RedisSetting struct {
 	Password string `mapstructure:"password"`
 	DB       int    `mapstructure:"db"`
 	Protocol int    `mapstructure:"protocal"`
+}
+
+type RabbitMQSetting struct {
+	Host     string `mapstructure:"host"`
+	Port     int    `mapstructure:"port"`
+	User     string `mapstructure:"user"`
+	Password string `mapstructure:"password"`
+	VHost    string `mapstructure:"vhost"`
 }

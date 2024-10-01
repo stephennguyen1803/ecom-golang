@@ -1,10 +1,15 @@
 package service
 
 import (
+	"context"
+	"ecom-project/global"
 	"ecom-project/internal/repo"
-	"ecom-project/internal/utils/sendto"
+	"encoding/json"
 	"errors"
-	"fmt"
+	"log"
+	"time"
+
+	amqp "github.com/rabbitmq/amqp091-go"
 )
 
 // OTPService defines the interface for sending OTP.
@@ -29,14 +34,61 @@ func (e *EmailOTPService) SendOTP(email string, otp int) error {
 	//err := sendto.SendTextEmail([]string{email}, "anhdung.phc@gmail.com", otp)
 
 	//option-2: using send html email using template html
-	err := sendto.SendTemplateEmailOtp(
+	/* err := sendto.SendTemplateEmailOtp(
 		[]string{email},
 		"anhdung.phc@gmail.com",
 		"otp_email",
 		map[string]interface{}{"otp": otp})
 	if err != nil {
 		fmt.Println("Error sending OTP via email:", err)
+	} */
+
+	//option-3: publish message to message broker (RabbitMQ, Kafka, etc.) - send email asynchronously
+	// Create a channel
+	ch := global.RabbitMQCh
+
+	// Declare a quorum queue for OTP messages
+	args := amqp.Table{
+		"x-queue-type": "quorum",
 	}
+	// Declare a queue for OTP messages
+	q, err := ch.QueueDeclare(
+		"otp-authen", // name
+		true,         // durable
+		false,        // delete when unused
+		false,        // exclusive
+		false,        // no-wait
+		args,         // arguments
+	)
+	if err != nil {
+		failOnError(err, "Failed to declare a queue")
+	}
+
+	message := map[string]interface{}{
+		"email": email,
+		"otp":   otp,
+	}
+
+	// Convert map to JSON
+	messageJSON, _ := json.Marshal(message)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	err = ch.PublishWithContext(
+		ctx,
+		"",     // exchange
+		q.Name, // routing key
+		false,  // mandatory
+		false,  // immediate
+		amqp.Publishing{
+			ContentType: "text/plain",
+			Body:        messageJSON,
+		})
+	if err != nil {
+		failOnError(err, "Failed to publish a message")
+	}
+
 	return err
 }
 
@@ -69,4 +121,10 @@ func (p *PhoneOTPService) CheckIfUserExists(phone string) error {
 		return errors.New("phone number already exists")
 	}
 	return nil
+}
+
+func failOnError(err error, msg string) {
+	if err != nil {
+		log.Panicf("%s: %s", msg, err)
+	}
 }

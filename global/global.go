@@ -19,4 +19,5 @@ var (
 	Redis         *redis.Client
 	KafkaProducer *kafka.Writer
 	RabbitMQConn  *amqp.Connection
+	RabbitMQCh    *amqp.Channel
 )

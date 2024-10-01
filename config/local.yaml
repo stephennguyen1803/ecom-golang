@@ -25,6 +25,12 @@ databases:
     password: admin2
     host: mongodb
     dbName: shopDev
+rabbitmq:
+  host: octopus-01.rmq3.cloudamqp.com
+  port: 5671
+  user: akpwryeb
+  password: UiSkc1jO9GXYtkjH2PjOVRGRtW9pdmSg
+  vhost: akpwryeb
 security:
   jwt:
     key: abc123
