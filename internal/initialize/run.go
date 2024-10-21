@@ -18,6 +18,7 @@ func Run() {
 	InitMysql()
 	InitMysqlSQLC()
 	fmt.Printf("mysql.username: %v\n", global.Config.Mysql.User)
+	InitServicesInteface()
 	//4 - init redis
 	InitRedis()
 	//5 - init kafka
