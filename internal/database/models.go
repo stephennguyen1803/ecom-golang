@@ -4,6 +4,36 @@
 
 package database
 
+import (
+	"database/sql"
+	"time"
+)
+
+type PreGoAccUserBase9999 struct {
+	UserID         uint64
+	UserAccount    string
+	UserPassword   string
+	UserSalt       string
+	UserLoginTime  sql.NullTime
+	UserLoginIp    sql.NullString
+	UserLogoutTime sql.NullTime
+	UserStatus     bool
+	UserCreatedAt  time.Time
+	UserUpdatedAt  time.Time
+}
+
+type PreGoAccUserVerify9999 struct {
+	VerifyID        uint64
+	VerifyOtp       string
+	VerifyKey       string
+	VerifyKeyHash   string
+	VerifyType      string
+	IsVerfified     bool
+	IsDeleted       bool
+	VerifyCreatedAt time.Time
+	VerifyUpdatedAt time.Time
+}
+
 // Account
 type PreGoCrmUserC struct {
 	// Account ID

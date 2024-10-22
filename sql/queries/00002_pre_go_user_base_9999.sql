@@ -1,0 +1,40 @@
+-- name: GetOneUserInfo :one
+SELECT user_id, user_account, user_password, user_salt
+FROM `pre_go_acc_user_base_9999`
+WHERE user_account = ?;
+
+-- name: GetOneUserInfoAdmin :one
+SELECT user_id, user_account, user_password, 
+       user_salt, user_login_time, user_login_ip, user_logout_time,
+       user_status, user_created_at, user_updated_at
+FROM `pre_go_acc_user_base_9999`
+WHERE user_account = ?;
+
+-- name: CheckUserBaseExist :one
+SELECT COUNT(*) 
+FROM `pre_go_acc_user_base_9999`
+WHERE user_account = ?;
+
+-- name: AddUserBase :exec
+INSERT INTO pre_go_acc_user_base_9999 (
+    user_account, 
+    user_password, 
+    user_salt, 
+    user_status, 
+    user_created_at, 
+    user_updated_at
+) VALUES (?, ?, ?, ?, NOW(), NOW());
+
+-- name: LoginUserBase :exec
+UPDATE pre_go_acc_user_base_9999
+SET user_login_time = NOW(),
+    user_login_ip = ?,
+    user_updated_at = NOW()
+WHERE user_account = ? AND user_password = ?;
+
+-- name: LogoutUserBase :exec
+UPDATE pre_go_acc_user_base_9999
+SET user_logout_time = NOW(),
+    user_updated_at = NOW()
+WHERE user_account = ?;
+
