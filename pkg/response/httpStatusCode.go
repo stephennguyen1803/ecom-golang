@@ -12,6 +12,9 @@ const (
 	ErrorCodeUserHasExists      = 50001 // User has exist
 	ErrorInvalidOTP             = 50002 // Invalid OTP
 	ErrorUserBadRequest         = 50003 // Bad request
+
+	//Error Code Login
+	ErrorCodeOTPExisted = 60001 // OTP existed
 )
 
 // message map
@@ -25,4 +28,5 @@ var msg = map[int]string{
 	ErrorUserBadRequest:         "User is missing information",
 	ErrorMissingDestinationType: "Missing destination in headers",
 	ErrorSendOTP:                "Send OTP error",
+	ErrorCodeOTPExisted:         "OTP existed but not registry",
 }
