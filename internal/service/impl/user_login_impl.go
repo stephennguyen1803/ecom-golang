@@ -2,15 +2,18 @@ package impl
 
 import (
 	"context"
+	"database/sql"
 	"ecom-project/global"
 	"ecom-project/internal/consts"
 	"ecom-project/internal/database"
 	"ecom-project/internal/model"
+	"ecom-project/internal/service"
 	"ecom-project/internal/utils"
 	"ecom-project/internal/utils/crypto"
 	"ecom-project/internal/utils/random"
 	"ecom-project/pkg/response"
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 	"time"
@@ -19,12 +22,14 @@ import (
 )
 
 type sUserLogin struct {
-	query *database.Queries
+	query      *database.Queries
+	otpFactory *service.OTPFactory
 }
 
-func NewUserLogin(query *database.Queries) *sUserLogin {
+func NewUserLogin(query *database.Queries, otpFactory *service.OTPFactory) *sUserLogin {
 	return &sUserLogin{
-		query: query,
+		query:      query,
+		otpFactory: otpFactory,
 	}
 }
 
@@ -34,9 +39,13 @@ func (s *sUserLogin) Login(ctx context.Context) error {
 
 func (s *sUserLogin) Register(ctx context.Context, in *model.RegisterInput) (codeResult int, err error) {
 	// login
+	strategy, err := s.otpFactory.GetOTPService(in.VerifyType)
+	if err != nil {
+		return response.ErrorCodeParamInvalid, err
+	}
 	// 1. hash email
 	fmt.Printf("verifyKey: %s\n", in.VerifyKey)
-	fmt.Printf("verifyType: %s\n", in.VerifyType)
+	fmt.Printf("verifyType: %d\n", in.VerifyType)
 
 	hashKey := crypto.GetHash(strings.ToLower(in.VerifyKey))
 	fmt.Printf("hashKey: %s\n", hashKey)
@@ -53,6 +62,8 @@ func (s *sUserLogin) Register(ctx context.Context, in *model.RegisterInput) (cod
 
 	// 3. Create OTP
 	userKey := utils.GetUserKey(hashKey)
+
+	// 3.1 Check key has already existed in redis
 	otpFound, err := global.Redis.Get(ctx, userKey).Result()
 	switch {
 	case err == redis.Nil:
@@ -79,9 +90,34 @@ func (s *sUserLogin) Register(ctx context.Context, in *model.RegisterInput) (cod
 		return response.ErrorInvalidOTP, err
 	}
 
-	//6. Send OTP to user
+	// 6. Send the OTP via the appropriate strategy (email or phone)
+	err = strategy.SendOTP(*in, otpNew)
+	if err != nil {
+		return response.ErrorSendOTP, err
+	}
 
-	return nil
+	// 7. Save OTP to database
+	results, err := s.query.InsertOTPVerfiy(ctx, database.InsertOTPVerfiyParams{
+		VerifyOtp:     strconv.Itoa(otpNew),
+		VerifyKey:     in.VerifyKey,
+		VerifyKeyHash: hashKey,
+		VerifyType:    sql.NullInt32{Int32: int32(in.VerifyType), Valid: true},
+		IsVerfified:   sql.NullBool{Bool: false, Valid: true},
+		IsDeleted:     sql.NullBool{Bool: false, Valid: true},
+	})
+
+	if err != nil {
+		return response.ErrorSendEmail, err
+	}
+
+	//8. Get LastId
+	lastId, err := results.LastInsertId()
+	if err != nil {
+		return response.ErrorSendEmail, err
+	}
+	log.Println("lastIdVerifyUser: ", lastId)
+
+	return response.ErrorCodeSuccess, nil
 }
 
 func (s *sUserLogin) VerifyOTP(ctx context.Context) error {

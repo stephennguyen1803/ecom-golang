@@ -79,9 +79,9 @@ type InsertOTPVerfiyParams struct {
 	VerifyOtp     string
 	VerifyKey     string
 	VerifyKeyHash string
-	VerifyType    string
-	IsVerfified   bool
-	IsDeleted     bool
+	VerifyType    sql.NullInt32
+	IsVerfified   sql.NullBool
+	IsDeleted     sql.NullBool
 }
 
 func (q *Queries) InsertOTPVerfiy(ctx context.Context, arg InsertOTPVerfiyParams) (sql.Result, error) {

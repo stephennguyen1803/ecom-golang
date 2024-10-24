@@ -19,5 +19,5 @@ CREATE TABLE IF NOT EXISTS `pre_go_acc_user_base_9999` (
 
 -- +goose Down
 -- +goose StatementBegin
-SELECT 'down SQL query';
+DROP TABLE IF EXISTS `pre_go_acc_user_base_9999`;
 -- +goose StatementEnd
