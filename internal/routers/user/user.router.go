@@ -2,7 +2,6 @@ package user
 
 import (
 	"ecom-project/internal/controller"
-	"ecom-project/internal/wire"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,12 +14,13 @@ func (ur *UserRouter) InitUserRouter(router *gin.RouterGroup) {
 	// init controller
 	// Using Wire Go to inject dependency
 	// Dependency Injection
-	userController, _ := wire.InitUserRouterHandler()
+	// userController, _ := wire.InitUserRouterHandler()
 
 	userRouterPublic := router.Group("/user")
 	{
 		//call middleware
-		userRouterPublic.POST("/register", userController.Register) // register -> YES -> send OTP -> verify OTP -> create account ||
+		// userRouterPublic.POST("/register", userController.Register) // register -> YES -> send OTP -> verify OTP -> create account ||
+		userRouterPublic.POST("/register", controller.Login.Register) // register -> YES -> send OTP -> verify OTP -> create account ||
 		userRouterPublic.POST("/otp")
 		userRouterPublic.POST("/login", controller.Login.Login)
 	}

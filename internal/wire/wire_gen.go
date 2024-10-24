@@ -17,8 +17,7 @@ import (
 func InitUserRouterHandler() (*controller.UserController, error) {
 	iUserAuthRepository := repo.NewUserAuthRepository()
 	redisService := service.NewRedisService(iUserAuthRepository)
-	iUserRepository := repo.NewUserRepository()
-	otpFactory := service.NewOTPFactory(iUserRepository)
+	otpFactory := service.NewOTPFactory()
 	iUserService := service.NewUserService(redisService, otpFactory)
 	userController := controller.NewUserController(iUserService)
 	return userController, nil

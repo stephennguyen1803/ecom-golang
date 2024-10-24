@@ -11,8 +11,9 @@ Authorization: valid-token
 Content-Type: application/json
 
 {
-    "email": "demo01@gmail.com",
-    "purpose": "TEST-DEV444"
+    "verify_key": "demo01@gmail.com",
+    "verify_type": 1,
+    "verify_purpose": "TEST_USER"
 }
 
 ### User Registration Phone
@@ -21,6 +22,7 @@ Authorization: valid-token
 Content-Type: application/json
 
 {
-    "phone": "0383826639",
-    "purpose": "TEST-DEV111"
+    "verify_key": "0383826639",
+    "verify_type": 2,
+    "verify_purpose": "TEST_USER"
 }

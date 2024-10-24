@@ -10,5 +10,6 @@ import (
 func InitServicesInteface() {
 	queries := database.New(global.Mdbc)
 	// User Service Interface
-	service.InitUserLogin(impl.NewUserLogin(queries))
+	otpFactory := service.NewOTPFactory() // Assuming you have a function to create an OTPFactory instance
+	service.InitUserLogin(impl.NewUserLogin(queries, otpFactory))
 }
