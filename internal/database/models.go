@@ -9,6 +9,33 @@ import (
 	"time"
 )
 
+type PreGoAccUser9999 struct {
+	// User ID
+	UserID uint64
+	// User account
+	UserAccount string
+	// User nickname
+	UserNickname sql.NullString
+	// User avatar
+	UserAvatar sql.NullString
+	// User state: 0-Locked ,  1-Activated ,  2-Not Activated
+	UserState uint8
+	// Mobile phone number
+	UserMobile sql.NullString
+	// User gender: 0-Secret ,  1-Male ,  2-Female
+	UserGender sql.NullInt16
+	// User birthday
+	UserBirthday sql.NullTime
+	// User email address
+	UserEmail sql.NullString
+	// Authentication status: 0-Not Authenticated ,  1-Pending ,  2-Authenticated ,  3-Failed
+	UserIsAuthentication uint8
+	// Record creation time
+	CreatedAt sql.NullTime
+	// Record update time
+	UpdatedAt sql.NullTime
+}
+
 type PreGoAccUserBase9999 struct {
 	UserID         uint64
 	UserAccount    string

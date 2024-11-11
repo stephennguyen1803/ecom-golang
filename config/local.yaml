@@ -4,9 +4,9 @@ server:
 mysql:
   host: 127.0.0.1
   port: 3306
-  user: root
-  password: admin
-  dbName: shopDevGo
+  user: shopdev
+  password: shopdev
+  dbName: shopdevgo
   maxIdleConns: 10
   maxOpenConns: 100
   connMaxLifetime: 3600
@@ -17,7 +17,7 @@ redis:
   db: 0
   protocal: 3
 databases:
-  - user: root
+  - user: shopdev
     password: admin
     host: mysql
     dbName: shopDev
