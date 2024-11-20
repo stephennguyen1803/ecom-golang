@@ -120,8 +120,38 @@ func (s *sUserLogin) Register(ctx context.Context, in *model.RegisterInput) (cod
 	return response.ErrorCodeSuccess, nil
 }
 
-func (s *sUserLogin) VerifyOTP(ctx context.Context) error {
-	return nil
+func (s *sUserLogin) VerifyOTP(ctx context.Context, in *model.VerifyOTPInput) (out model.VerifyOTPOutput, err error) {
+	// logic
+	hashKey := crypto.GetHash(strings.ToLower(in.VerifyKey))
+
+	// 1. Get OTP from Redis
+	otpFound, err := global.Redis.Get(ctx, utils.GetUserKey(hashKey)).Result()
+	if err != nil {
+		return out, err
+	}
+
+	// 2. Check OTP
+	if in.VerifyCode != otpFound {
+		// if OTP is invalid 3 times in minutes ??? => send email to user to verify
+		return out, fmt.Errorf("OTP is invalid")
+	}
+
+	infoOtp, err := s.query.GetInfoOTP(ctx, hashKey)
+	if err != nil {
+		return out, err
+	}
+
+	// 3. Update status verified OTP
+	err = s.query.UpdateUserVerificationStatus(ctx, hashKey)
+	if err != nil {
+		return out, err
+	}
+
+	// 4. output - should use key_secret to generate token
+	out.Token = infoOtp.VerifyKeyHash
+	out.Message = "Success"
+
+	return out, nil
 }
 
 func (s *sUserLogin) UpdatePasswordRegister(ctx context.Context) error {

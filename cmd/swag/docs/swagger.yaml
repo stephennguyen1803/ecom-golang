@@ -1,0 +1,18 @@
+basePath: /v1/2024
+host: localhost:8090
+info:
+  contact:
+    email: anhdung.phc@gmail.com
+    name: Anh Dung Nguyen
+    url: https://www.linkedin.com/in/anhdungnguyen-95262198/
+  description: This is API Document for Ecommerce Backend Golang Project.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://github.com/stephennguyen1803/ecom-golang
+  title: API Ecommerce Backend Golang Project
+  version: "1.0"
+paths: {}
+schemes:
+- http
+swagger: "2.0"
