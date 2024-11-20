@@ -6,6 +6,8 @@ import (
 	"ecom-project/internal/routers"
 
 	"github.com/gin-gonic/gin"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func InitRouter() *gin.Engine {
@@ -18,6 +20,7 @@ func InitRouter() *gin.Engine {
 		gin.SetMode(gin.ReleaseMode)
 		r = gin.New()
 	}
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	// Serve static files from the "assets" directory - should be used for development only
 	r.Static("/assets/images", "./assets/images")
 

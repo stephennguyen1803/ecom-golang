@@ -19,6 +19,7 @@ resetse:
 
 sqlc_generate:
 	@sqlc generate
-
+swagger_generate:
+	@swag init -g main.go -o  ./cmd/swag/docs --dir ./cmd/server
 
 .PHONY: upse downse resetse create_migration up_by_one
