@@ -27,6 +27,17 @@ func (cUser *cUserLogin) Login(ctx *gin.Context) {
 	response.SuccessResponse(ctx, response.ErrorCodeSuccess)
 }
 
+// VerifyOTP godoc
+// @Summary      Verify OTP
+// @Description  Verfiy OTP for login user
+// @Tags         login
+// @Accept       json
+// @Produce      json
+// @Param        payload body   model.VerifyOTPInput  true  "payload"
+// @Success      200  {object}  response.Response
+// @Failure      200  {object}  response.Response
+// @Failure      500
+// @Router       /user/register [post]
 func (cUser *cUserLogin) VerifyOTP(ctx *gin.Context) {
 	var params model.VerifyOTPInput
 	if err := ctx.ShouldBindJSON(&params); err != nil {

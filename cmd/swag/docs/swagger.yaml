@@ -1,4 +1,23 @@
 basePath: /v1/2024
+definitions:
+  model.VerifyOTPInput:
+    properties:
+      verify_code:
+        type: string
+      verify_key:
+        type: string
+    type: object
+  response.Response:
+    properties:
+      code:
+        description: code infor for user
+        type: integer
+      data:
+        description: dynamic data
+      message:
+        description: message infor for user
+        type: string
+    type: object
 host: localhost:8090
 info:
   contact:
@@ -12,7 +31,31 @@ info:
   termsOfService: https://github.com/stephennguyen1803/ecom-golang
   title: API Ecommerce Backend Golang Project
   version: "1.0"
-paths: {}
+paths:
+  /user/register:
+    post:
+      consumes:
+      - application/json
+      description: Verfiy OTP for login user
+      parameters:
+      - description: payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/model.VerifyOTPInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+      summary: Verify OTP
+      tags:
+      - login
 schemes:
 - http
 swagger: "2.0"

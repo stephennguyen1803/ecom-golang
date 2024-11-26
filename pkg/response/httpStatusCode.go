@@ -2,7 +2,7 @@ package response
 
 const (
 	ErrorCodeSuccess      = 20001 // Success
-	ErrorCodeParamInvalid = 20003 // Email is invalid
+	ErrorCodeParamInvalid = 20003 // Param is invalid
 	ErrorTokenInvalid     = 30001 // Token is invalid
 	ErrorSendEmail        = 30002 // Send email error
 	ErrorSendOTP          = 30003 // Send OTP error
@@ -20,7 +20,7 @@ const (
 // message map
 var msg = map[int]string{
 	ErrorCodeSuccess:            "Success",
-	ErrorCodeParamInvalid:       "Email is invalid",
+	ErrorCodeParamInvalid:       "Param is invalid",
 	ErrorTokenInvalid:           "Token is invalid",
 	ErrorCodeUserHasExists:      "User has exist",
 	ErrorInvalidOTP:             "Invalid OTP",
