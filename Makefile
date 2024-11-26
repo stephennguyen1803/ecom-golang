@@ -18,8 +18,8 @@ resetse:
 	@GOOSE_DRIVER=$(GOOSE_DRIVER) GOOSE_DBSTRING=$(GOOSE_DBSTRING) goose -dir=$(GOOSE_DIR) reset
 
 sqlc_generate:
-	@sqlc generate
+	sqlc generate
 swagger_generate:
-	@swag init -g main.go -o  ./cmd/swag/docs --dir ./cmd/server
+	swag init -g ./cmd/server/main.go -o  ./cmd/swag/docs
 
-.PHONY: upse downse resetse create_migration up_by_one
+.PHONY: upse downse resetse create_migration up_by_one swagger_generate

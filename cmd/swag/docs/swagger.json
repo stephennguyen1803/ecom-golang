@@ -20,5 +20,72 @@
     },
     "host": "localhost:8090",
     "basePath": "/v1/2024",
-    "paths": {}
+    "paths": {
+        "/user/register": {
+            "post": {
+                "description": "Verfiy OTP for login user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "login"
+                ],
+                "summary": "Verify OTP",
+                "parameters": [
+                    {
+                        "description": "payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.VerifyOTPInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "model.VerifyOTPInput": {
+            "type": "object",
+            "properties": {
+                "verify_code": {
+                    "type": "string"
+                },
+                "verify_key": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.Response": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "code infor for user",
+                    "type": "integer"
+                },
+                "data": {
+                    "description": "dynamic data"
+                },
+                "message": {
+                    "description": "message infor for user",
+                    "type": "string"
+                }
+            }
+        }
+    }
 }
