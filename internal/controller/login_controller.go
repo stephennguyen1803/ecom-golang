@@ -8,7 +8,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 )
 
 // management controller user login ??? chua hieu ro lam
@@ -28,8 +27,8 @@ func (cUser *cUserLogin) Login(ctx *gin.Context) {
 }
 
 // VerifyOTP godoc
-// @Summary      Verify OTP
-// @Description  Verfiy OTP for login user
+// @Summary      Verify Account Using OTP
+// @Description  Verfiy OTP login by user
 // @Tags         login
 // @Accept       json
 // @Produce      json
@@ -37,7 +36,7 @@ func (cUser *cUserLogin) Login(ctx *gin.Context) {
 // @Success      200  {object}  response.Response
 // @Failure      200  {object}  response.Response
 // @Failure      500
-// @Router       /user/register [post]
+// @Router       /user/verify_account [post]
 func (cUser *cUserLogin) VerifyOTP(ctx *gin.Context) {
 	var params model.VerifyOTPInput
 	if err := ctx.ShouldBindJSON(&params); err != nil {
@@ -47,7 +46,7 @@ func (cUser *cUserLogin) VerifyOTP(ctx *gin.Context) {
 
 	result, err := service.UserLogin().VerifyOTP(ctx, &params)
 	if err != nil {
-		global.Logger.Error("Error Verifying OTP: ", zap.Error(err), zapcore.Field{Key: "params", Type: zapcore.ObjectMarshalerType})
+		global.Logger.Error("Error Verifying OTP: ", zap.Error(err))
 		response.ErrorResponse(ctx, response.ErrorInvalidOTP)
 		return
 	}
@@ -55,6 +54,17 @@ func (cUser *cUserLogin) VerifyOTP(ctx *gin.Context) {
 	response.SuccessResponse(ctx, result)
 }
 
+// Register godoc
+// @Summary      Register User
+// @Description  Register User Using Verify Key
+// @Tags         login
+// @Accept       json
+// @Produce      json
+// @Param        payload body   model.RegisterInput  true  "payload"
+// @Success      200  {object}  response.Response
+// @Failure      200  {object}  response.Response
+// @Failure      500
+// @Router       /user/register [post]
 func (cUser *cUserLogin) Register(ctx *gin.Context) {
 	var params model.RegisterInput
 	if err := ctx.ShouldBindJSON(&params); err != nil {
@@ -64,7 +74,7 @@ func (cUser *cUserLogin) Register(ctx *gin.Context) {
 
 	codeStatus, err := service.UserLogin().Register(ctx, &params)
 	if err != nil {
-		global.Logger.Error("Error Registering OTP: ", zap.Error(err), zapcore.Field{Key: "params", Type: zapcore.ObjectMarshalerType})
+		global.Logger.Error("Error Registering OTP: ", zap.Error(err))
 		response.ErrorResponse(ctx, codeStatus)
 		return
 	}

@@ -36,7 +36,7 @@ func InitRouter() *gin.Engine {
 
 	MainGroup := r.Group("/v1/2024")
 	{
-		MainGroup.GET("/chekcStatus") // tracking monitor - check health of service
+		MainGroup.GET("/checkStatus") // tracking monitor - check health of service
 	}
 	{
 		userGroupRouter.UserRouter.InitUserRouter(MainGroup)

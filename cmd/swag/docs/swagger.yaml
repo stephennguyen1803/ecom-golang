@@ -1,5 +1,14 @@
 basePath: /v1/2024
 definitions:
+  model.RegisterInput:
+    properties:
+      verify_key:
+        type: string
+      verify_purpose:
+        type: string
+      verify_type:
+        type: integer
+    type: object
   model.VerifyOTPInput:
     properties:
       verify_code:
@@ -36,7 +45,31 @@ paths:
     post:
       consumes:
       - application/json
-      description: Verfiy OTP for login user
+      description: Register User Using Verify Key
+      parameters:
+      - description: payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/model.RegisterInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+      summary: Register User
+      tags:
+      - login
+  /user/verify_account:
+    post:
+      consumes:
+      - application/json
+      description: Verfiy OTP login by user
       parameters:
       - description: payload
         in: body
@@ -53,7 +86,7 @@ paths:
             $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
-      summary: Verify OTP
+      summary: Verify Account Using OTP
       tags:
       - login
 schemes:

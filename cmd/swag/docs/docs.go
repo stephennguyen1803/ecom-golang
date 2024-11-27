@@ -26,7 +26,7 @@ const docTemplate = `{
     "paths": {
         "/user/register": {
             "post": {
-                "description": "Verfiy OTP for login user",
+                "description": "Register User Using Verify Key",
                 "consumes": [
                     "application/json"
                 ],
@@ -36,7 +36,44 @@ const docTemplate = `{
                 "tags": [
                     "login"
                 ],
-                "summary": "Verify OTP",
+                "summary": "Register User",
+                "parameters": [
+                    {
+                        "description": "payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.RegisterInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/user/verify_account": {
+            "post": {
+                "description": "Verfiy OTP login by user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "login"
+                ],
+                "summary": "Verify Account Using OTP",
                 "parameters": [
                     {
                         "description": "payload",
@@ -63,6 +100,20 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "model.RegisterInput": {
+            "type": "object",
+            "properties": {
+                "verify_key": {
+                    "type": "string"
+                },
+                "verify_purpose": {
+                    "type": "string"
+                },
+                "verify_type": {
+                    "type": "integer"
+                }
+            }
+        },
         "model.VerifyOTPInput": {
             "type": "object",
             "properties": {
@@ -103,8 +154,6 @@ var SwaggerInfo = &swag.Spec{
 	Description:      "This is API Document for Ecommerce Backend Golang Project.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
-	LeftDelim:        "{{",
-	RightDelim:       "}}",
 }
 
 func init() {
