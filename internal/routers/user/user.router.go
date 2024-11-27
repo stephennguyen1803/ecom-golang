@@ -21,7 +21,7 @@ func (ur *UserRouter) InitUserRouter(router *gin.RouterGroup) {
 		//call middleware
 		// userRouterPublic.POST("/register", userController.Register) // register -> YES -> send OTP -> verify OTP -> create account ||
 		userRouterPublic.POST("/register", controller.Login.Register) // register -> YES -> send OTP -> verify OTP -> create account ||
-		userRouterPublic.POST("/otp")
+		userRouterPublic.POST("/verify_account", controller.Login.VerifyOTP)
 		userRouterPublic.POST("/login", controller.Login.Login)
 	}
 	//private route - require authentication
