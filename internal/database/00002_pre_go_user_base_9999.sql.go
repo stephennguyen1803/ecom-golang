@@ -10,7 +10,7 @@ import (
 	"database/sql"
 )
 
-const addUserBase = `-- name: AddUserBase :exec
+const addUserBase = `-- name: AddUserBase :execresult
 INSERT INTO pre_go_acc_user_base_9999 (
     user_account, 
     user_password, 
@@ -28,14 +28,13 @@ type AddUserBaseParams struct {
 	UserStatus   bool
 }
 
-func (q *Queries) AddUserBase(ctx context.Context, arg AddUserBaseParams) error {
-	_, err := q.db.ExecContext(ctx, addUserBase,
+func (q *Queries) AddUserBase(ctx context.Context, arg AddUserBaseParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, addUserBase,
 		arg.UserAccount,
 		arg.UserPassword,
 		arg.UserSalt,
 		arg.UserStatus,
 	)
-	return err
 }
 
 const checkUserBaseExist = `-- name: CheckUserBaseExist :one
