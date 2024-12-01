@@ -15,7 +15,7 @@ SELECT COUNT(*)
 FROM `pre_go_acc_user_base_9999`
 WHERE user_account = ?;
 
--- name: AddUserBase :exec
+-- name: AddUserBase :execresult
 INSERT INTO pre_go_acc_user_base_9999 (
     user_account, 
     user_password, 

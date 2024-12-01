@@ -11,7 +11,7 @@ type (
 		Login(ctx context.Context) error
 		Register(ctx context.Context, in *model.RegisterInput) (codeResult int, err error)
 		VerifyOTP(ctx context.Context, in *model.VerifyOTPInput) (out model.VerifyOTPOutput, err error)
-		UpdatePasswordRegister(ctx context.Context) error
+		UpdatePasswordRegister(ctx context.Context, token, password string) (userId int64, err error)
 	}
 
 	IUserInfo interface {
