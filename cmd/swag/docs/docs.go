@@ -34,7 +34,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "login"
+                    "account management"
                 ],
                 "summary": "Register User",
                 "parameters": [
@@ -61,6 +61,43 @@ const docTemplate = `{
                 }
             }
         },
+        "/user/update_password_register": {
+            "post": {
+                "description": "Update User Password Using  User Token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "account management"
+                ],
+                "summary": "Update User Password",
+                "parameters": [
+                    {
+                        "description": "payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.UpdateUserPasswordInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/user/verify_account": {
             "post": {
                 "description": "Verfiy OTP login by user",
@@ -71,7 +108,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "login"
+                    "account management"
                 ],
                 "summary": "Verify Account Using OTP",
                 "parameters": [
@@ -111,6 +148,17 @@ const docTemplate = `{
                 },
                 "verify_type": {
                     "type": "integer"
+                }
+            }
+        },
+        "model.UpdateUserPasswordInput": {
+            "type": "object",
+            "properties": {
+                "user_password": {
+                    "type": "string"
+                },
+                "user_token": {
+                    "type": "string"
                 }
             }
         },
