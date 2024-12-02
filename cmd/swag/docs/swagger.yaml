@@ -9,6 +9,13 @@ definitions:
       verify_type:
         type: integer
     type: object
+  model.UpdateUserPasswordInput:
+    properties:
+      user_password:
+        type: string
+      user_token:
+        type: string
+    type: object
   model.VerifyOTPInput:
     properties:
       verify_code:
@@ -64,7 +71,31 @@ paths:
           description: Internal Server Error
       summary: Register User
       tags:
-      - login
+      - account management
+  /user/update_password_register:
+    post:
+      consumes:
+      - application/json
+      description: Update User Password Using  User Token
+      parameters:
+      - description: payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateUserPasswordInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+      summary: Update User Password
+      tags:
+      - account management
   /user/verify_account:
     post:
       consumes:
@@ -88,7 +119,7 @@ paths:
           description: Internal Server Error
       summary: Verify Account Using OTP
       tags:
-      - login
+      - account management
 schemes:
 - http
 swagger: "2.0"
