@@ -127,6 +127,7 @@ func (s *sUserLogin) VerifyOTP(ctx context.Context, in *model.VerifyOTPInput) (o
 	// 1. Get OTP from Redis
 	otpFound, err := global.Redis.Get(ctx, utils.GetUserKey(hashKey)).Result()
 	if err != nil {
+		fmt.Printf("hashKey: %s\n", hashKey)
 		return out, err
 	}
 
@@ -155,7 +156,7 @@ func (s *sUserLogin) VerifyOTP(ctx context.Context, in *model.VerifyOTPInput) (o
 }
 
 func (s *sUserLogin) UpdatePasswordRegister(ctx context.Context, token, password string) (userId int64, err error) {
-	//1 - kiem tra token da duoc verify hay chua???
+	//1 - token is already verified : user_verified table
 	infoOtp, err := s.query.GetInfoOTP(ctx, token)
 	if err != nil {
 		return response.ErrorCodeUserOTPNotExisted, err

@@ -16,3 +16,8 @@ type VerifyOTPOutput struct {
 	UserId  string `json:"user_id"`
 	Message string `json:"message"`
 }
+
+type UpdateUserPasswordInput struct {
+	UserToken    string `json:"user_token"`
+	UserPassword string `json:"user_password"`
+}

@@ -22,6 +22,7 @@ func (ur *UserRouter) InitUserRouter(router *gin.RouterGroup) {
 		// userRouterPublic.POST("/register", userController.Register) // register -> YES -> send OTP -> verify OTP -> create account ||
 		userRouterPublic.POST("/register", controller.Login.Register) // register -> YES -> send OTP -> verify OTP -> create account ||
 		userRouterPublic.POST("/verify_account", controller.Login.VerifyOTP)
+		userRouterPublic.POST("/update_password_register", controller.Login.UpdatePasswordRegister)
 		userRouterPublic.POST("/login", controller.Login.Login)
 	}
 	//private route - require authentication
