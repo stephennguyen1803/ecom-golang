@@ -12,6 +12,7 @@ import (
 	"ecom-project/internal/utils/crypto"
 	"ecom-project/internal/utils/random"
 	"ecom-project/pkg/response"
+	"encoding/json"
 	"fmt"
 	"log"
 	"strconv"
@@ -19,6 +20,7 @@ import (
 	"time"
 
 	"github.com/redis/go-redis/v9"
+	"go.uber.org/zap"
 )
 
 type sUserLogin struct {
@@ -33,8 +35,52 @@ func NewUserLogin(query *database.Queries, otpFactory *service.OTPFactory) *sUse
 	}
 }
 
-func (s *sUserLogin) Login(ctx context.Context) error {
-	return nil
+func (s *sUserLogin) Login(ctx context.Context, in model.LoginInput) (Result int, out model.LoginOutput, err error) {
+	// Logic login
+	// 1. Get user info in User_Base
+	userBase, err := s.query.GetOneUserInfo(ctx, in.UserAccount)
+	if err != nil {
+		return response.ErrorCodeAuthenFailed, out, err
+	}
+
+	// 2. Check password
+	if !crypto.MatchingPassword(in.UserPassword, userBase.UserSalt, userBase.UserPassword) {
+		return response.ErrorCodeAuthenFailed, out, fmt.Errorf("password is incorrect")
+	}
+
+	// 3. check two factor authentication
+	// 4. Update User login time, login ip in User_Base
+	go s.query.LoginUserBase(ctx, database.LoginUserBaseParams{
+		UserLoginIp:  sql.NullString{String: "127.0.0.1", Valid: true},
+		UserAccount:  in.UserAccount,
+		UserPassword: userBase.UserPassword, // password not need
+	})
+
+	// 5. Create UUID
+	subToken := utils.GeneralCliTokenUUID(int(userBase.UserID))
+	global.Logger.Info("subToken: ", zap.String("subToken", subToken))
+
+	// 6. Get user_info Table
+	infoUser, err := s.query.GetUser(ctx, uint64(userBase.UserID))
+	if err != nil {
+		return response.ErrorCodeAuthenFailed, out, err
+	}
+
+	// 7. Convert to json to save in redis
+	infoUserJson, err := json.Marshal(infoUser)
+	if err != nil {
+		return response.ErrorCodeAuthenFailed, out, fmt.Errorf("conver to json failed")
+	}
+
+	// 8. Save in Redis with key is subToken and save infoUserJson
+	err = global.Redis.Set(ctx, subToken, infoUserJson, time.Duration(consts.TIME_OTP_REGISTERS*int(time.Minute))).Err()
+	if err != nil {
+		return response.ErrorCodeAuthenFailed, out, err
+	}
+
+	// 9. Create Token
+
+	return 200, out, nil
 }
 
 func (s *sUserLogin) Register(ctx context.Context, in *model.RegisterInput) (codeResult int, err error) {

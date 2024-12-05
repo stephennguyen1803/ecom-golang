@@ -7,6 +7,9 @@ const (
 	ErrorSendEmail        = 30002 // Send email error
 	ErrorSendOTP          = 30003 // Send OTP error
 
+	//User Authentication
+	ErrorCodeAuthenFailed = 40005 // Authentication failed
+
 	//Register Code
 	ErrorMissingDestinationType = 50000 // Missing destination in headers
 	ErrorCodeUserHasExists      = 50001 // User has exist

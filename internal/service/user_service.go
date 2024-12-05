@@ -8,7 +8,7 @@ import (
 type (
 	// ... define list user interface in here
 	IUserLogin interface {
-		Login(ctx context.Context) error
+		Login(ctx context.Context, in model.LoginInput) (Result int, out model.LoginOutput, err error)
 		Register(ctx context.Context, in *model.RegisterInput) (codeResult int, err error)
 		VerifyOTP(ctx context.Context, in *model.VerifyOTPInput) (out model.VerifyOTPOutput, err error)
 		UpdatePasswordRegister(ctx context.Context, token, password string) (userId int64, err error)
